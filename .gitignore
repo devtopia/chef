@@ -1,4 +1,5 @@
 /cookbooks/
 /.bundle/
+/bin/
 /vendor/bundle/
 Gemfile.lock
