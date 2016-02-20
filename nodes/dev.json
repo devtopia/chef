@@ -1,0 +1,10 @@
+{
+  "name": "dev",
+  "automatic": {
+    "ipaddress": "dev"
+  },
+  "run_list": [
+    "recipe[yum-epel]",
+    "recipe[mariadb]"
+  ]
+}
