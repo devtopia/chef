@@ -1,7 +1,9 @@
 DEPENDENCIES
+  vim
   yum-epel
 
 GRAPH
+  vim (2.0.1)
   yum (3.10.0)
   yum-epel (0.6.5)
     yum (~> 3.2)

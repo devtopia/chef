@@ -1,5 +1,6 @@
 {
   "name": "dev",
+  "chef_environment": "dev",
   "automatic": {
     "ipaddress": "dev"
   },
@@ -7,6 +8,8 @@
     "recipe[yum-epel]",
     "recipe[yum-update]",
     "recipe[mariadb]",
-    "recipe[ruby-env]"
+    "recipe[ruby-env]",
+    "recipe[lua]",
+    "recipe[vim]"
   ]
 }
