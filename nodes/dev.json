@@ -10,6 +10,7 @@
     "recipe[mariadb]",
     "recipe[ruby-env]",
     "recipe[lua]",
-    "recipe[vim]"
+    "recipe[vim]",
+    "recipe[vim-plugin]"
   ]
 }

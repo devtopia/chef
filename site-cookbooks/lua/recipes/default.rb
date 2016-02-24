@@ -19,7 +19,7 @@ git "#{src_filepath}" do
   group 'root'
 end
 
-bash 'install_luajit' do
+bash 'install luajit' do
   cwd ::File.dirname(src_filepath)
   code <<-EOH
     cd #{src_filepath}
