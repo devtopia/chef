@@ -13,40 +13,57 @@
   end
 end
 
-git "/home/#{node['ruby-env']['user']}/.rbenv" do
+git "/home/#{node['user']}/.rbenv" do
   repository node['ruby-env']['rbenv_url']
   action :sync
-  user node['ruby-env']['user']
-  group node['ruby-env']['group']
+  user node['user']
+  group node['group']
 end
 
 template ".bash_profile" do
   source '.bash_profile.erb'
-  path "/home/#{node['ruby-env']['user']}/.bash_profile"
+  path "/home/#{node['user']}/.bash_profile"
   mode '0644'
-  owner node['ruby-env']['user']
-  group node['ruby-env']['group']
-  not_if "grep rbenv ~/.bash_profile", :environment => {:'HOME' => "/home/#{node['ruby-env']['user']}"}
+  owner node['user']
+  group node['group']
+  not_if "grep rbenv ~/.bash_profile", :environment => {:'HOME' => "/home/#{node['user']}"}
 end
 
-directory "/home/#{node['ruby-env']['user']}/.rbenv/plugins" do
-  owner node['ruby-env']['user']
-  group node['ruby-env']['group']
+directory "/home/#{node['user']}/.rbenv/plugins" do
+  owner node['user']
+  group node['group']
   mode '0755'
   action :create
 end
 
-git "/home/#{node['ruby-env']['user']}/.rbenv/plugins/ruby-build" do
+git "/home/#{node['user']}/.rbenv/plugins/ruby-build" do
   repository node['ruby-env']['ruby-build_url']
   action :sync
-  user node['ruby-env']['user']
-  group node['ruby-env']['group']
+  user node['user']
+  group node['group']
 end
 
 execute "rbenv install #{node['ruby-env']['version']}" do
-  command "/home/#{node['ruby-env']['user']}/.rbenv/bin/rbenv install #{node['ruby-env']['version']}"
-  user node['ruby-env']['user']
-  group node['ruby-env']['group']
-  environment 'HOME' => "/home/#{node['ruby-env']['user']}"
-  not_if { File.exists?("/home/#{node['ruby-env']['user']}/.rbenv/versions/#{node['ruby-env']['version']}") }
+  command "/home/#{node['user']}/.rbenv/bin/rbenv install #{node['ruby-env']['version']}"
+  user node['user']
+  group node['group']
+  environment 'HOME' => "/home/#{node['user']}"
+  not_if { File.exists?("/home/#{node['user']}/.rbenv/versions/#{node['ruby-env']['version']}") }
+end
+
+execute "rbenv global #{node['ruby-env']['version']}" do
+  command "/home/#{node['user']}/.rbenv/bin/rbenv global #{node['ruby-env']['version']}"
+  user node['user']
+  group node['group']
+  environment 'HOME' => "/home/#{node['user']}"
+end
+
+%w(rbenv-rehash bundler).each do |gem|
+  execute "gem install #{gem}" do
+    command "/home/#{node['user']}/.rbenv/shims/gem install #{gem}"
+    user node['user']
+    group node['group']
+    environment 'HOME' => "/home/#{node['user']}"
+    not_if "/home/#{node['user']}/.rbenv/shims/gem list | grep #{gem}"
+  end
 end

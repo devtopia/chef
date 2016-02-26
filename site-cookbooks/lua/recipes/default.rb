@@ -20,9 +20,9 @@ git "#{src_filepath}" do
 end
 
 bash 'install luajit' do
-  cwd ::File.dirname(src_filepath)
   code <<-EOH
     cd #{src_filepath}
     make && make install
   EOH
+  not_if { File.exists?("/usr/local/bin/luajit") } 
 end

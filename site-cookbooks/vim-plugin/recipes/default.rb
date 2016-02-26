@@ -27,8 +27,8 @@ execute 'install neobundle' do
   user node['user']
   group node['group']
   cwd "/home/#{node['user']}"
-  command 'curl -L https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh'
   environment 'HOME' => "/home/#{node['user']}"
+  command 'curl -L https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh'
   not_if { File.exists?("/home/#{node['user']}/.vim/bundle/neobundle.vim") }
 end
 
@@ -38,4 +38,25 @@ end
     group node['group']
     mode '0644'
   end
+end
+
+# execute 'install vim plugin via neobundle' do
+#   user node['user']
+#   group node['group']
+#   cwd "/home/#{node['user']}"
+#   command "sudo -u vagrant /home/#{node['user']}/.vim/bundle/neobundle.vim/bin/neoinstall"
+#   environment 'HOME' => "/home/#{node['user']}"
+#   creates "/home/#{node['user']}/.neoinstalled"
+# end
+
+bash 'install vim plugin via neobundle' do
+  user node['user']
+  group node['group']
+  cwd "/home/#{node['user']}"
+  environment 'HOME' => "/home/#{node['user']}"
+  code <<-EOH
+    sudo -u #{node['user']} ~/.vim/bundle/neobundle.vim/bin/neoinstall
+    touch .neoinstalled
+  EOH
+  not_if { File.exists?("/home/#{node['user']}/.neoinstalled") }
 end

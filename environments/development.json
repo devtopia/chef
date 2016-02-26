@@ -1,0 +1,7 @@
+{
+  "name": "development",
+  "default_attributes": {
+    "user": "vagrant",
+    "group": "vagrant"
+  }
+}
