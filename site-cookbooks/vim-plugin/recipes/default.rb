@@ -7,6 +7,10 @@
 # All rights reserved - Do Not Redistribute
 #
 
+package 'ctags' do
+  action :install
+end
+
 directory "/home/#{node['user']}/.vim" do
   owner node['user']
   group node['group']
@@ -40,14 +44,9 @@ end
   end
 end
 
-# execute 'install vim plugin via neobundle' do
-#   user node['user']
-#   group node['group']
-#   cwd "/home/#{node['user']}"
-#   command "sudo -u vagrant /home/#{node['user']}/.vim/bundle/neobundle.vim/bin/neoinstall"
-#   environment 'HOME' => "/home/#{node['user']}"
-#   creates "/home/#{node['user']}/.neoinstalled"
-# end
+breakpoint "after bash 'install vim plugin via neobundle'" do
+  action :break
+end
 
 bash 'install vim plugin via neobundle' do
   user node['user']
