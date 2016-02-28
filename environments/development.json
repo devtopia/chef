@@ -3,5 +3,10 @@
   "default_attributes": {
     "user": "vagrant",
     "group": "vagrant"
+  },
+  "override_attributes": {
+    "vim": {
+      "install_method": "source"
+    }
   }
 }
