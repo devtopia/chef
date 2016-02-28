@@ -44,7 +44,7 @@ end
   end
 end
 
-breakpoint "after bash 'install vim plugin via neobundle'" do
+breakpoint "before bash 'install vim plugin via neobundle'" do
   action :break
 end
 
