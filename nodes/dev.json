@@ -1,11 +1,6 @@
 {
   "name": "dev",
   "chef_environment": "development",
-  "override": {
-    "vim": {
-      "install_method": "source"
-    }
-  },
   "automatic": {
     "ipaddress": "dev"
   },
