@@ -50,5 +50,5 @@ execute 'install vim plugin via neobundle' do
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
   command "sudo -u #{node['user']} /home/#{node['user']}/.vim/bundle/neobundle.vim/bin/neoinstall 1>.vim-neoinstalled 2>.vim-neoinstalled"
-  not_if { File.exists?("/home/#{node['user']}/.vim-plugin_installed") }
+  not_if { File.exists?("/home/#{node['user']}/.vim-neoinstalled") }
 end
