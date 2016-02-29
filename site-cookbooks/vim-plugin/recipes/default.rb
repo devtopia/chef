@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-package 'ctags' do
+package "vim" do
   action :install
 end
 
@@ -32,7 +32,7 @@ execute 'install neobundle' do
   group node['group']
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
-  command 'curl -L https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh'
+  command "curl -L https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh"
   not_if { File.exists?("/home/#{node['user']}/.vim/bundle/neobundle.vim") }
 end
 
@@ -44,14 +44,11 @@ end
   end
 end
 
-bash 'install vim plugin via neobundle' do
+execute 'install vim plugin via neobundle' do
   user node['user']
   group node['group']
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
-  code <<-EOH
-    sudo -u #{node['user']} ~/.vim/bundle/neobundle.vim/bin/neoinstall
-    touch .neoinstalled
-  EOH
-  not_if { File.exists?("/home/#{node['user']}/.neoinstalled") }
+  command "sudo -u #{node['user']} /home/#{node['user']}/.vim/bundle/neobundle.vim/bin/neoinstall 1>.vim-neoinstalled 2>.vim-neoinstalled"
+  not_if { File.exists?("/home/#{node['user']}/.vim-plugin_installed") }
 end

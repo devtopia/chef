@@ -11,7 +11,6 @@
     "recipe[ruby-env]",
     "recipe[lua]",
     "recipe[vim]",
-    "recipe[vim-plugin]",
-    "role[web]"
+    "recipe[vim-plugin]"
   ]
 }
