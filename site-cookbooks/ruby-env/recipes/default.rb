@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-%w(gcc git openssl-devel readline-devel).each do |pkg|
+%w(gcc gcc-c++ git openssl-devel readline-devel).each do |pkg|
   package pkg do
     action :install
   end
