@@ -2,52 +2,33 @@
 " e with vi.
 set nocompatible
 
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
+call plug#begin('~/.vim/plugged')
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Recommended to install
-" After install, turn shell ~/.vim/bundle/vimproc, (n,g)make -f your_machines_makefile
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \     'windows': 'make -f make_mingw32.mak',
-      \     'cygwin':  'make -f make_cygwin.mak',
-      \     'mac':     'make -f make_mac.mak',
-      \     'unix':    'make -f make_unix.mak',
-      \    },
-      \ }
-
-" My Bundles here:
-"
-" Note: You don't set neobundle setting in .gvimrc!
-" Original repos on github
-" basic plugins
-" ------------------------------------------------------------------------------
-NeoBundle 'itchyny/dictionary.vim'
+" https://github.com/itchyny/dictionary.vim
+Plug 'itchyny/dictionary.vim'
 map <silent> ,d :Dictionary<Enter>
-NeoBundle 'vim-jp/vimdoc-ja'
-" ------------------------------------------------------------------------------
 
-" Handles bracketed-paste-mode in vim
-NeoBundle 'ConradIrwin/vim-bracketed-paste'
-" ------------------------------------------------------------------------------
+" https://github.com/vim-jp/vimdoc-ja
+Plug 'vim-jp/vimdoc-ja'
 
-NeoBundle 'Shougo/vimshell'
-" vimfiler
-" ------------------------------------------------------------------------------
-NeoBundle 'Shougo/vimfiler'
+" https://github.com/ConradIrwin/vim-bracketed-paste
+Plug 'ConradIrwin/vim-bracketed-paste'
+
+" https://github.com/Shougo/vimproc.vim
+Plug 'Shougo/vimproc.vim', { 'dir': '~/.vim/plugged/vimproc.vim', 'do': 'make' }
+
+" https://github.com/Shougo/vimshell.vim
+Plug 'Shougo/vimshell', { 'on': 'VimShell' }
+
+" https://github.com/Shougo/vimfiler.vim
+Plug 'Shougo/vimfiler', { 'on': 'VimFiler' }
 let g:vimfiler_safe_mode_by_default = 0 " セーフモードを無効化する
-" ------------------------------------------------------------------------------
 
-" Unite
-" ------------------------------------------------------------------------------
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/neoyank.vim'
+" https://github.com/Shougo/unite.vim
+Plug 'Shougo/unite.vim'
+
+" https://github.com/Shougo/neoyank.vim
+Plug 'Shougo/neoyank.vim'
 let g:unite_enable_start_insert=1
 let g:unite_source_history_yank_enable =1
 let g:unite_source_file_mru_limit = 200
@@ -56,7 +37,9 @@ nmap <silent> ,ub :<C-u>Unite buffer<CR>
 nmap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
 nmap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
 nmap <silent> ,uu :<C-u>Unite file_mru buffer<CR>
-NeoBundle 'basyura/unite-rails'
+
+" https://github.com/basyura/unite-rails
+Plug 'basyura/unite-rails', { 'for': 'ruby' }
 function! UniteRailsSetting()
   nmap <buffer><C-H><C-H><C-H>  :<C-U>Unite rails/view<CR>
   nmap <buffer><C-H><C-H>       :<C-U>Unite rails/model<CR>
@@ -72,22 +55,29 @@ function! UniteRailsSetting()
   nmap <buffer><C-H>h           :<C-U>Unite rails/heroku<CR>
 endfunction
 augroup UniteRails
+  autocmd!
   autocmd User Rails call UniteRailsSetting()
 augroup END
-" ------------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------------
-NeoBundle 'jpalardy/vim-slime'
+" https://github.com/jpalardy/vim-slime
+Plug 'jpalardy/vim-slime'
 let g:slime_target = "screen"
 let g:slime_paste_file = "$HOME/.slime_paste"
-" ------------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------------
-NeoBundle 'slim-template/vim-slim'
-" ------------------------------------------------------------------------------
+" https://github.com/slim-template/vim-slim
+Plug 'slim-template/vim-slim'
 
-" ------------------------------------------------------------------------------
-NeoBundle 'scrooloose/syntastic'
+" https://github.com/scrooloose/syntastic
+Plug 'scrooloose/syntastic'
+" recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol = "✗"
 let g:syntastic_warning_symbol = "⚠"
@@ -97,79 +87,54 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_coffee_checkers = ['coffeelint']
 autocmd FileType ruby if exists('b:rails_root') |
   \ let b:syntastic_ruby_rubocop_options = '--rails' | endif
-NeoBundle 'scrooloose/nerdtree'
+
+" https://github.com/scrooloose/nerdtree
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
 let g:NERDTreeWinPos    = "left"
 let g:NERDTreeDirArrows = 1
 let g:NERDTreeMinimalUI = 1
 map <C-e> :NERDTreeToggle<CR>
-" ------------------------------------------------------------------------------
 
-" ------------------------------------------------------------------------------
-NeoBundle 'Lokaltog/vim-easymotion'
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-s)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-s2)
-" Turn on case sensitive feature
-let g:EasyMotion_smartcase = 1
-" JK motions: Line motions
+" https://github.com/scrooloose/nerdtree
+Plug 'Lokaltog/vim-easymotion'
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+" Gif config
+map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
-" ------------------------------------------------------------------------------
+map <Leader>h <Plug>(easymotion-linebackward)
 
-" Ctags
-" ------------------------------------------------------------------------------
-" tagsジャンプの時に複数ある時は一覧表示                                        
-nmap <C-]> g<C-]> 
-NeoBundleLazy 'alpaca-tc/alpaca_tags', {
-      \ 'depends': ['Shougo/vimproc.vim'],
-      \ 'autoload' : {
-      \   'commands' : [
-      \     { 'name' : 'AlpacaTagsBundle', 'complete': 'customlist,alpaca_tags#complete_source' },
-      \     { 'name' : 'AlpacaTagsUpdate', 'complete': 'customlist,alpaca_tags#complete_source' },
-      \     'AlpacaTagsSet', 'AlpacaTagsCleanCache', 'AlpacaTagsEnable', 'AlpacaTagsDisable', 'AlpacaTagsKillProcess', 'AlpacaTagsProcessStatus',
-      \ ],
-      \ }}
-let g:alpaca_tags#ctags_bin = 'ctags'
-let g:alpaca_tags#config = {
-      \ '_' : '-R --sort=yes --languages=+Ruby --languages=-js,JavaScript',
-      \ 'default' : '--languages=-css,scss,html,js,JavaScript',
-      \ 'js' : '--languages=+js',
-      \ '-js' : '--languages=-js,JavaScript',
-      \ 'vim' : '--languages=+Vim,vim',
-      \ 'php' : '--languages=+php',
-      \ '-vim' : '--languages=-Vim,vim',
-      \ '-style': '--languages=-css,scss,js,JavaScript,html',
-      \ 'scss' : '--languages=+scss --languages=-css',
-      \ 'css' : '--languages=+css',
-      \ 'java' : '--languages=+java $JAVA_HOME/src',
-      \ 'ruby': '--languages=+Ruby',
-      \ 'coffee': '--languages=+coffee',
-      \ '-coffee': '--languages=-coffee',
-      \ 'bundle': '--languages=+Ruby',
-      \ }
-augroup AlpacaTags
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+
+" https://github.com/szw/vim-tags
+Plug 'szw/vim-tags', { 'for': 'ruby' }
+function! SetVimTags()
+  let g:vim_tags_auto_generate = 1
+  let g:vim_tags_project_tags_command = "{CTAGS} -R --languages=+ruby,+coffee,-html,-javascript,-c,-c++ --exclude=vendor/bundle {OPTIONS} {DIRECTORY} 2>/dev/null"
+  let g:vim_tags_gems_tags_command = "{CTAGS} -R --languages=+ruby,+coffee,-html,-javascript,-c,-c++ {OPTIONS} `bundle show --paths` 2>/dev/null"
+  nmap <C-]> g<C-]>
+endfunction
+augroup VimTags
   autocmd!
-  if exists(':AlpacaTags')
-    autocmd BufWritePost Gemfile AlpacaTagsBundle
-    autocmd BufEnter * AlpacaTagsSet
-    autocmd BufWritePost * AlpacaTagsUpdate ruby
-  endif
+  autocmd filetype ruby call SetVimTags()
 augroup END
-" NeoBundle 'szw/vim-tags'
-" let g:vim_tags_ignore_files     = ['.gitignore', '.svnignore', '.html', '.js', '.css', '.yml']
-" let g:vim_tags_directories      = ['.tags', '.git', '.svn', '.hg']
-" set tags=tags,Gemfile.lock.tags
-" ------------------------------------------------------------------------------
-
-" quickrun
-" ------------------------------------------------------------------------------
-NeoBundle 'thinca/vim-quickrun'
+  
+" https://github.com/thinca/vim-quickrun
+Plug 'thinca/vim-quickrun'
 let g:quickrun_config = {
       \ '_': {
       \   'runner': 'vimproc',
@@ -179,40 +144,34 @@ let g:quickrun_config = {
       \   'outputter/buffer/close_on_empty': 1
       \ }
       \ }
-" ------------------------------------------------------------------------------
 
-" markup language
-" ------------------------------------------------------------------------------
-NeoBundle 'joker1007/vim-markdown-quote-syntax'
-NeoBundle 'rcmdnk/vim-markdown'
+" markdown
+Plug 'joker1007/vim-markdown-quote-syntax'
+Plug 'rcmdnk/vim-markdown'
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_frontmatter = 1
-NeoBundle 'timcharper/textile.vim'
-NeoBundle 'tyru/open-browser.vim'
-NeoBundle 'kannokanno/previm'
+Plug 'timcharper/textile.vim'
+Plug 'tyru/open-browser.vim'
+Plug 'kannokanno/previm'
 autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,mark*} set filetype=markdown
 autocmd BufRead,BufNewFile *.textile set filetype=textile
 map ,w :PrevimOpen<Enter>
-" ------------------------------------------------------------------------------
 
 " git
-NeoBundle 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 
 " repeat + surround
-" ------------------------------------------------------------------------------
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-surround'
-" ------------------------------------------------------------------------------
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
 
-NeoBundle 'tsaleh/vim-tmux'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'sudo.vim'
+Plug 'tsaleh/vim-tmux'
+Plug 'jiangmiao/auto-pairs'
+Plug 'tomtom/tcomment_vim'
+Plug 'sudo.vim'
 
 " lightline & airline
-" ------------------------------------------------------------------------------
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'itchyny/lightline-powerful'
+Plug 'itchyny/lightline.vim'
+Plug 'itchyny/lightline-powerful'
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
@@ -344,7 +303,7 @@ endfunction
 let g:unite_force_overwrite_statusline = 0
 let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
-" NeoBundle 'bling/vim-airline'
+" Plug 'bling/vim-airline'
 " if !exists('g:airline_symbols')
 "   let g:airline_symbols = {}
 " endif
@@ -361,11 +320,9 @@ let g:vimshell_force_overwrite_statusline = 0
 " let g:airline_symbols.paste = 'Þ'
 " let g:airline_symbols.paste = '∥'
 " let g:airline_symbols.whitespace = 'Ξ'
-" ------------------------------------------------------------------------------
 
 " indent guides
-" ------------------------------------------------------------------------------
-NeoBundle 'nathanaelkane/vim-indent-guides'
+Plug 'nathanaelkane/vim-indent-guides'
 " vim立ち上げたときに、自動的にvim-indent-guidesをオンにする
 let g:indent_guides_enable_on_vim_startup = 1
 " ガイドをスタートするインデントの量
@@ -376,11 +333,9 @@ let g:indent_guides_auto_colors           = 0
 let g:indent_guides_color_change_percent  = 30
 " ガイドの幅
 let g:indent_guides_guide_size            = 1
-" ------------------------------------------------------------------------------
 
 " completion
-" ------------------------------------------------------------------------------
-NeoBundle 'Shougo/neocomplete'
+Plug 'Shougo/neocomplete'
 " note: this option must set it in .vimrc(_vimrc).
 " not in .gvimrc(_gvimrc)!
 " disable autocomplpop.
@@ -481,9 +436,10 @@ let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 "    let col = col('.') - 1
 "    return !col || getline('.')[col - 1]  =~ '\s'
 "  endfunction"}}}
-NeoBundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plug 'Shougo/neosnippet'
+Plug 'honza/vim-snippets'
+Plug 'Shougo/neosnippet-snippets'
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
@@ -505,19 +461,17 @@ endif
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets'
-" ------------------------------------------------------------------------------
+let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim/snippets'
 
 " align
-" ------------------------------------------------------------------------------
-NeoBundle 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align'
 " Start interactive EasyAlign in visual mode
 vmap <Enter> <Plug>(EasyAlign)
 " Start interactive EasyAlign with a Vim movement
 nmap <Leader>a <Plug>(EasyAlign)
 " Repeat alignment in visual mode with . key
 vmap . <Plug>(EasyAlignRepeat)
-NeoBundle 'godlygeek/tabular'
+Plug 'godlygeek/tabular'
 imap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
 function! s:align()
   let p = '^\s*|\s.*\s|\s*$'
@@ -529,20 +483,25 @@ function! s:align()
     call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
   endif
 endfunction
-" ------------------------------------------------------------------------------
 
 " ruby
-" ------------------------------------------------------------------------------
-" matchit
+Plug 'NigoroJr/rsense', { 'for': 'ruby' }
+Plug 'supermomonga/neocomplete-rsense.vim', { 'for': 'ruby' }
+let g:neocomplete#sources#rsense#home_directory = '/usr/local/bin/rsense'
+" augroup load_rsense
+"   autocmd!
+"   autocmd InsertEnter * call plug#load('neocomplete-rsense.vim') | autocmd! load_rsense
+" augroup END
+  
 source $VIMRUNTIME/macros/matchit.vim
-NeoBundle 'vimtaku/hl_matchit.vim'
+Plug 'vimtaku/hl_matchit.vim'
 " for hl_matchit
 let g:hl_matchit_enable_on_vim_startup = 1
 let g:hl_matchit_hl_groupname = 'Title'
 let g:hl_matchit_allow_ft = 'html\|vim\|ruby\|sh'
 " augroup matchit
 "   autocmd!
-"   autocmd FileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
+"   autocmd fileType ruby let b:match_words = '\<\(module\|class\|def\|begin\|do\|if\|unless\|case\)\>:\<\(elsif\|when\|rescue\)\>:\<\(else\|ensure\)\>:\<end\>'
 " augroup END
 
 " magic comment
@@ -555,20 +514,22 @@ function! MagicComment()
 endfunction
 map <silent> <F8> :call MagicComment()<CR>
 
-NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-rails'
-let g:rails_default_file='config/database.yml'
-let g:rails_level=4
-let g:rails_mappings=1
-let g:rails_modelines=0
-" let g:rails_some_option = 1
-" let g:rails_statusline = 1
-" let g:rails_subversion=0
-" let g:rails_syntax = 1
-" let g:rails_url='http://localhost:3000'
-" let g:rails_ctags_arguments='--languages=-javascript'
-" let g:rails_ctags_arguments = ''
+Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+
 function! VimRailsSetting()
+  let g:rails_default_file='config/database.yml'
+  let g:rails_level=4
+  let g:rails_mappings=1
+  let g:rails_modelines=0
+  " let g:rails_some_option = 1
+  " let g:rails_statusline = 1
+  " let g:rails_subversion=0
+  " let g:rails_syntax = 1
+  " let g:rails_url='http://localhost:3000'
+  " let g:rails_ctags_arguments='--languages=-javascript'
+  " let g:rails_ctags_arguments = ''
+
   nmap <buffer><Space>r :R<CR>
   nmap <buffer><Space>a :A<CR>
   nmap <buffer><Space>m :Rmodel<Space>
@@ -578,63 +539,63 @@ function! VimRailsSetting()
 endfunction
 
 augroup VimRails
+  autocmd!
   autocmd User Rails call VimRailsSetting()
 augroup END
- 
-augroup RailsDictSetting
-  autocmd!
-augroup END
 
-NeoBundle 'tpope/vim-bundler'
-NeoBundle 'tpope/vim-cucumber'
-NeoBundle 'tpope/vim-haml'
+Plug 'tpope/vim-bundler', { 'for': 'ruby' }
+Plug 'tpope/vim-cucumber', { 'for': 'ruby' }
+Plug 'tpope/vim-haml', { 'for': 'ruby' }
 
 " RSpec.vim mappings
-" ------------------------------------------------------------------------------
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'thoughtbot/vim-rspec'
-map <Leader>c :call RunCurrentSpecFile()<CR>
-map <Leader>n :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
-let g:rspec_command = "Dispatch bin/rspec {spec}"
-" iTerm instead of Terminal
-let g:rspec_runner = "os_x_iterm"
-" ------------------------------------------------------------------------------
+Plug 'tpope/vim-dispatch'
+Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
 
-NeoBundle 'thinca/vim-ref'
-NeoBundle 'depuracao/vim-rdoc'
+function! SetVimRspec()
+  map ,c :call RunCurrentSpecFile()<CR>
+  map ,n :call RunNearestSpec()<CR>
+  map ,l :call RunLastSpec()<CR>
+  map ,a :call RunAllSpecs()<CR>
+  let g:rspec_command = "Dispatch bin/rspec {spec}"
+  " iTerm instead of Terminal
+  let g:rspec_runner = "os_x_iterm"
+endfunction
+
+augroup VimRspec
+  autocmd!
+  autocmd filetype ruby call SetVimRspec() 
+augroup END
+
+Plug 'thinca/vim-ref', { 'for': 'ruby' }
+Plug 'depuracao/vim-rdoc', { 'for': 'ruby' }
 
 " javascript
-NeoBundle 'jelera/vim-javascript-syntax'
-NeoBundle 'kchmck/vim-coffee-script'
+Plug 'jelera/vim-javascript-syntax'
+Plug 'kchmck/vim-coffee-script'
 map <silent> cf :CoffeeWatch vert<CR>
-NeoBundle 'JavaScript-Indent'
+Plug 'JavaScript-Indent'
 autocmd BufRead,BufNewFile *.ejs set filetype=html
 
 " css
-NeoBundle 'JulesWang/css.vim'
-NeoBundle 'cakebaker/scss-syntax.vim'
+Plug 'JulesWang/css.vim'
+Plug 'cakebaker/scss-syntax.vim'
 source ~/.vimrc_scss_indent
 
 " colorscheme
-" ------------------------------------------------------------------------------
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'Lokaltog/vim-distinguished'
-NeoBundle 'mopp/mopkai.vim'
-NeoBundle 'sickill/vim-monokai'
-NeoBundle 'tomasr/molokai'
-NeoBundle 'chriskempson/vim-tomorrow-theme'
-NeoBundle 'croaky/vim-colors-github'
-NeoBundle 'MaxSt/FlatColor'
-NeoBundle 'vim-scripts/grishin-color-scheme'
-NeoBundle 'nelstrom/vim-mac-classic-theme'
-NeoBundle 'tpope/vim-vividchalk'
-" ------------------------------------------------------------------------------
+Plug 'nanotech/jellybeans.vim'
+Plug 'Lokaltog/vim-distinguished'
+Plug 'mopp/mopkai.vim'
+Plug 'sickill/vim-monokai'
+Plug 'tomasr/molokai'
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'croaky/vim-colors-github'
+Plug 'MaxSt/FlatColor'
+Plug 'vim-scripts/grishin-color-scheme'
+Plug 'nelstrom/vim-mac-classic-theme'
+Plug 'tpope/vim-vividchalk'
 
 " tagbar & taglist
-" ------------------------------------------------------------------------------
-NeoBundle 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 let g:tagbar_ctags_bin = 'ctags'
 let g:tagbar_type_ruby = {
     \ 'kinds' : [
@@ -673,29 +634,19 @@ let g:tagbar_type_markdown = {
     \ ]
 \ }
 map <silent> tt :TagbarToggle<CR>
-" NeoBundle 'taglist.vim'
+" Plug 'taglist.vim'
 " let Tlist_Ctags_Cmd        = 'ctags'
 " let Tlist_Show_One_File    = 1 " 現在表示中のファイルのみのタグしか表示しない
 " let Tlist_Use_Right_Window = 1 " 右側にtag listのウインドうを表示する
 " let Tlist_Exit_OnlyWindow  = 1 " taglistのウインドウだけならVimを閉じる
 " " \lでtaglistウインドウを開いたり閉じたり出来るショートカット
 " map <silent> <C-l> :TlistToggle<CR>
-" ------------------------------------------------------------------------------
 
-call neobundle#end()
+call plug#end()
 
 " 読み込んだプラグインも含め、ファイルタイプを検出、
 " ファイルタイプ別プラグイン、インデントを有効化する。
 filetype plugin indent on
-
-"
-" Brief help
-" :NeoBundleList          - list configured bundles
-" :NeoBundleInstall(!)    - install(update) bundles
-" :NeoBundleClean(!)      - confirm(or auto-approve) removal of unused bundles
-
-" Installation check.
-NeoBundleCheck
 
 " 256カラーを使う。
 set t_Co=256
@@ -704,7 +655,7 @@ set term=xterm-256color
 " カラースキムを定義する。
 " colorscheme jellybeans
 " colorscheme distinguished 
-colorscheme mopkai
+" colorscheme mopkai
 " colorscheme monokai
 " colorscheme molokai
 " colorscheme Tomorrow
