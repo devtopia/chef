@@ -50,6 +50,6 @@ execute 'install vim plugin via vim-plug' do
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
   # command "sudo -u #{node['user']} vim +PlugInstall! +qall"
-  command "vim 'set shortmess=at' +PlugInstall! +qall"
+  command "vim -c 'set shortmess=at' +PlugInstall! +qall"
   not_if { File.exists?("/home/#{node['user']}/.vim/plugged") }
 end
