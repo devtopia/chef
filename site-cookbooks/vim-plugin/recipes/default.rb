@@ -18,7 +18,7 @@ directory "/home/#{node['user']}/.vim" do
   action :create
 end
 
-%w(backup bundle swap).each do |dir|
+%w(backup swap).each do |dir|
   directory "/home/#{node['user']}/.vim/#{dir}" do
     owner node['user']
     group node['group']
@@ -27,13 +27,13 @@ end
   end
 end
 
-execute 'install neobundle' do
+execute 'install vim-plug' do
   user node['user']
   group node['group']
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
-  command "curl -L https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh | sh"
-  not_if { File.exists?("/home/#{node['user']}/.vim/bundle/neobundle.vim") }
+  command "curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  not_if { File.exists?("/home/#{node['user']}/.vim/autoload/plug.vim") }
 end
 
 %w(.vimrc_scss_indent .vimrc).each do |file|
@@ -44,11 +44,11 @@ end
   end
 end
 
-execute 'install vim plugin via neobundle' do
+execute 'install vim plugin via vim-plug' do
   user node['user']
   group node['group']
   cwd "/home/#{node['user']}"
   environment 'HOME' => "/home/#{node['user']}"
-  command "sudo -u #{node['user']} /home/#{node['user']}/.vim/bundle/neobundle.vim/bin/neoinstall 1>.vim-neoinstalled 2>.vim-neoinstalled"
-  not_if { File.exists?("/home/#{node['user']}/.vim-neoinstalled") }
+  command "vim -c 'set shortmess=at' +PlugInstall! +qall"
+  not_if { File.exists?("/home/#{node['user']}/.vim/plugged") }
 end
