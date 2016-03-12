@@ -67,12 +67,12 @@ template '/etc/sysconfig/nginx' do
 end
 
 %w(/etc/init.d/nginx /etc/rc.d/init.d/nginx).each do |src|
-	template src do
+  template src do
     source 'nginx.init.erb'
-		owner 'root'
-		group 'root'
-		mode '0755'
-	end
+    owner 'root'
+    group 'root'
+    mode '0755'
+  end
 end
 
 %w(sites-available sites-enabled).each do |dir|
