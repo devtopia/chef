@@ -1,8 +1,8 @@
 {
-  "name": "dev",
+  "name": "test",
   "chef_environment": "development",
   "automatic": {
-    "ipaddress": "dev"
+    "ipaddress": "test"
   },
   "run_list": [
     "recipe[yum-epel]",
@@ -12,7 +12,6 @@
     "recipe[lua]",
     "recipe[vim]",
     "recipe[vim-plugin]",
-    "recipe[nodejs]",
-    "recipe[nginx]"
+    "role[web]"
   ]
 }

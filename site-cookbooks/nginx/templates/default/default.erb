@@ -1,0 +1,11 @@
+server {
+  listen   <%= node['nginx']['port'] %>;
+  server_name  dev;
+
+  access_log  /var/log/nginx/localhost.access.log;
+
+  location / {
+    root   /var/www/nginx-default;
+    index  index.html index.htm;
+  }
+}
