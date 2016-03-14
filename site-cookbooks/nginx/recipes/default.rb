@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
+include_recipe 'nginx::ohai_plugin' 
 nginx_url = node['nginx']['url']
 nginx_filename = "nginx-#{node['nginx']['version']}.tar.gz"
 src_filepath  = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{nginx_filename}"
@@ -84,35 +85,27 @@ end
   end
 end
 
-%w(default nginx_status).each do |site|
-  template "#{node['nginx']['dir']}/sites-available/#{site}" do
-    source "#{site}.erb"
-    owner 'root'
-    group 'root'
-    mode '0644'
-    notifies :reload, 'service[nginx]'
-  end
-end
-
-%w(default nginx_status).each do |site|
-  link "#{node['nginx']['dir']}/sites-enabled/#{site}" do
-    to "#{node['nginx']['dir']}/sites-available/#{site}"
-  end
-end
-
+node.run_state['force_recompile'] = false
+node.run_state['configure_flags'] = node['nginx']['default_configure_flags'] | node['nginx']['modules']
 bash "install nginx" do
   cwd File.dirname(src_filepath)
   code <<-EOH
     tar zxf #{nginx_filename} -C #{File.dirname(src_filepath)}
     cd #{File.dirname(src_filepath)}/#{File.basename(nginx_filename, ".tar.gz")}
-    ./configure --prefix=#{node['nginx']['prefix']} \
-                --conf-path=#{node['nginx']['dir']} \
-                --sbin-path=#{node['nginx']['sbin']} \
-                #{node['nginx']['modules']}
+    ./configure #{node.run_state['configure_flags'].join(' ')}
     make
     make install
   EOH
-	not_if "test -d #{node['nginx']['prefix']}" 
+
+  not_if do
+      node.run_state['force_recompile'] == false &&
+      node.automatic_attrs['nginx'] &&
+      node.automatic_attrs['nginx']['version'] == node['nginx']['version'] &&
+      node.automatic_attrs['nginx']['configure_arguments'].sort == node.run_state['configure_flags'].sort
+  end
+
+  notifies :restart, 'service[nginx]'
+  notifies :reload,  'ohai[reload_nginx]', :immediately
 end
 
 execute 'add to the list using the chkconfig command' do
@@ -128,6 +121,25 @@ template "#{node['nginx']['dir']}/nginx.conf" do
   notifies :reload, 'service[nginx]'
 end
 
+%w(default nginx_status).each do |site|
+  template "#{node['nginx']['dir']}/sites-available/#{site}" do
+    source "#{site}.erb"
+    owner 'root'
+    group 'root'
+    mode '0644'
+  end
+end
+
+%w(default nginx_status).each do |site|
+  link "#{node['nginx']['dir']}/sites-enabled/#{site}" do
+    to "#{node['nginx']['dir']}/sites-available/#{site}"
+    notifies :reload, 'service[nginx]'
+  end
+end
+
 service 'nginx' do
   action [:enable, :start]
 end
+
+node.run_state.delete('force_recompile')
+node.run_state.delete('configure_flags')
