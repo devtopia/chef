@@ -12,6 +12,7 @@
     "recipe[lua]",
     "recipe[vim]",
     "recipe[vim-plugin]",
+    "recipe[nodejs]",
     "recipe[nginx]"
   ]
 }

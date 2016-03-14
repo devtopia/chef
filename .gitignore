@@ -6,3 +6,4 @@
 Gemfile.lock
 *.box
 *.bak
+Vagrantfile
