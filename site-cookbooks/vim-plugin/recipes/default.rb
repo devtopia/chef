@@ -52,3 +52,11 @@ execute 'install vim plugin via vim-plug' do
   command "vim -c 'set shortmess=at' +PlugInstall! +qall"
   not_if { File.exists?("/home/#{node['user']}/.vim/plugged") }
 end
+
+execute 'enable colorscheme' do
+  user node['user']
+  group node['group']
+  cwd "/home/#{node['user']}"
+  environment 'HOME' => "/home/#{node['user']}"
+  command "sed -i -e 's/\" colorscheme mopkai/colorscheme mopkai/' .vimrc"
+end

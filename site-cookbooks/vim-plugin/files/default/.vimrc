@@ -485,13 +485,9 @@ function! s:align()
 endfunction
 
 " ruby
-Plug 'NigoroJr/rsense', { 'for': 'ruby' }
-Plug 'supermomonga/neocomplete-rsense.vim', { 'for': 'ruby' }
-let g:neocomplete#sources#rsense#home_directory = '/usr/local/bin/rsense'
-" augroup load_rsense
-"   autocmd!
-"   autocmd InsertEnter * call plug#load('neocomplete-rsense.vim') | autocmd! load_rsense
-" augroup END
+" Plug 'NigoroJr/rsense', { 'for': 'ruby' }
+" Plug 'supermomonga/neocomplete-rsense.vim', { 'for': 'ruby' }
+" let g:neocomplete#sources#rsense#home_directory = '/usr/local/bin/rsense'
   
 source $VIMRUNTIME/macros/matchit.vim
 Plug 'vimtaku/hl_matchit.vim'
