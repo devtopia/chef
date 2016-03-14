@@ -16,7 +16,7 @@ execute "install npm" do
   not_if "which npm"
 end
 
-%w(phantomjs).each do |pkg|
+%w(phantomjs-prebuilt).each do |pkg|
   execute "npm install #{pkg}" do
     command "npm -g install #{pkg}"
     not_if "npm -g ls --depth=0 | grep #{pkg}"
