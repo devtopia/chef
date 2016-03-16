@@ -9,7 +9,7 @@
 
 include_recipe 'nginx::ohai_plugin' 
 nginx_url = node['nginx']['url']
-nginx_filename = "nginx-#{node['nginx']['version']}.tar.gz"
+nginx_filename = "nginx-#{node['nginx']['ver']}.tar.gz"
 src_filepath  = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{nginx_filename}"
 
 %w(pcre pcre-devel).each do |pkg|
@@ -85,23 +85,24 @@ end
   end
 end
 
-node.run_state['force_recompile'] = false
-node.run_state['configure_flags'] = node['nginx']['default_configure_flags'] | node['nginx']['modules']
+force_recompile = false
+configure_flags = node['nginx']['default_configure_flags'] | node['nginx']['modules']
+
 bash "install nginx" do
   cwd File.dirname(src_filepath)
   code <<-EOH
     tar zxf #{nginx_filename} -C #{File.dirname(src_filepath)}
     cd #{File.dirname(src_filepath)}/#{File.basename(nginx_filename, ".tar.gz")}
-    ./configure #{node.run_state['configure_flags'].join(' ')}
+    ./configure #{configure_flags.join(' ')}
     make
     make install
   EOH
 
   not_if do
-      node.run_state['force_recompile'] == false &&
-      node.automatic_attrs['nginx'] &&
-      node.automatic_attrs['nginx']['version'] == node['nginx']['version'] &&
-      node.automatic_attrs['nginx']['configure_arguments'].sort == node.run_state['configure_flags'].sort
+    force_recompile == false &&
+    node.automatic_attrs['nginx'] &&
+    node.automatic_attrs['nginx']['version'] == node['nginx']['ver'] &&
+    node.automatic_attrs['nginx']['configure_arguments'].sort == configure_flags.sort
   end
 
   notifies :restart, 'service[nginx]'
@@ -140,6 +141,3 @@ end
 service 'nginx' do
   action [:enable, :start]
 end
-
-node.run_state.delete('force_recompile')
-node.run_state.delete('configure_flags')
