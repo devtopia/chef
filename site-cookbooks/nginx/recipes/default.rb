@@ -12,7 +12,7 @@ nginx_url = node['nginx']['url']
 nginx_filename = "nginx-#{node['nginx']['ver']}.tar.gz"
 src_filepath  = "#{Chef::Config['file_cache_path'] || '/tmp'}/#{nginx_filename}"
 
-%w(pcre pcre-devel).each do |pkg|
+%w(gcc gcc-c++ openssl-devel pcre pcre-devel).each do |pkg|
   package pkg do
     action :install
   end

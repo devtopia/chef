@@ -336,106 +336,79 @@ let g:indent_guides_guide_size            = 1
 
 " completion
 Plug 'Shougo/neocomplete'
-" note: this option must set it in .vimrc(_vimrc).
-" not in .gvimrc(_gvimrc)!
-" disable autocomplpop.
-let g:acp_enableatstartup = 0
-" use neocomplete.
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
-" use smartcase.
+" Use smartcase.
 let g:neocomplete#enable_smart_case = 1
-" set minimum syntax keyword length.
+" Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
-" define dictionary.
+" Define dictionary.
 let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default' : '',
-    \ 'vimshell' : $home.'/.vimshell_hist',
-    \ 'scheme' : $home.'/.gosh_completions'
-    \ }
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
 
-" define keyword.
+" Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {}
+    let g:neocomplete#keyword_patterns = {}
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" plugin key-mappings.
-imap <expr><c-g>     neocomplete#undo_completion()
-imap <expr><c-l>     neocomplete#complete_common_string()
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" recommended key-mappings.
-" <cr>: close popup and save indent.
-" imap <silent> <cr> <c-r>=<sid>my_cr_function()<cr>
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<cr>"
-  " for no inserting <cr> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<cr>"
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
-" <tab>: completion.
-imap <expr><tab>  pumvisible() ? "\<c-n>" : "\<tab>"
-" <c-h>, <bs>: close popup and delete backword char.
-imap <expr><c-h> neocomplete#smart_close_popup()."\<c-h>"
-imap <expr><bs> neocomplete#smart_close_popup()."\<c-h>"
-imap <expr><c-y>  neocomplete#close_popup()
-imap <expr><c-e>  neocomplete#cancel_popup()
-" close popup by <space>.
-"imap <expr><space> pumvisible() ? neocomplete#close_popup() : "\<space>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
-" for cursor moving in insert mode(not recommended)
-"imap <expr><left>  neocomplete#close_popup() . "\<left>"
-"imap <expr><right> neocomplete#close_popup() . "\<right>"
-"imap <expr><up>    neocomplete#close_popup() . "\<up>"
-"imap <expr><down>  neocomplete#close_popup() . "\<down>"
-" or set this.
-"let g:neocomplete#enable_cursor_hold_i = 1
-" or set this.
-"let g:neocomplete#enable_insert_char_pre = 1
-
-" autocomplpop like behavior.
+" AutoComplPop like behavior.
 "let g:neocomplete#enable_auto_select = 1
 
-" shell like behavior(not recommended).
+" Shell like behavior(not recommended).
 "set completeopt+=longest
 "let g:neocomplete#enable_auto_select = 1
 "let g:neocomplete#disable_auto_complete = 1
-"imap <expr><tab>  pumvisible() ? "\<down>" : "\<c-x>\<c-u>"
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
-" enable omni completion.
-autocmd filetype css setlocal omnifunc=csscomplete#completecss
-autocmd filetype html,markdown setlocal omnifunc=htmlcomplete#completetags
-autocmd filetype javascript setlocal omnifunc=javascriptcomplete#completejs
-autocmd filetype python setlocal omnifunc=pythoncomplete#complete
-autocmd filetype xml setlocal omnifunc=xmlcomplete#completetags
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
-" enable heavy omni completion.
+" Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#sources#omni#input_patterns.php =
-\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-let g:neocomplete#sources#omni#input_patterns.c =
-\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-let g:neocomplete#sources#omni#input_patterns.cpp =
-\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
-" for perlomni.vim setting.
+" For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl =
-\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplete#sources#omni#input_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-" For smart TAB completion.
-"imap <expr><TAB>  pumvisible() ? "\<C-n>" :
-"        \ <SID>check_back_space() ? "\<TAB>" :
-"        \ neocomplete#start_manual_complete()
-"  function! s:check_back_space() "{{{
-"    let col = col('.') - 1
-"    return !col || getline('.')[col - 1]  =~ '\s'
-"  endfunction"}}}
+
 Plug 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plug 'Shougo/neosnippet'
 Plug 'honza/vim-snippets'
@@ -737,6 +710,14 @@ set directory=~/.vim/swap
 " zc: close, zo: open, zC: close all, zO: open all
 set foldmethod=syntax
 set foldlevel=100
+autocmd InsertEnter * if !exists('w:last_fdm')
+            \| let w:last_fdm=&foldmethod
+            \| setlocal foldmethod=manual
+            \| endif
+autocmd InsertLeave,WinLeave * if exists('w:last_fdm')
+            \| let &l:foldmethod=w:last_fdm
+            \| unlet w:last_fdm
+            \| endif
 
 " ファイル間移動
 nmap <silent> <C-n>      :update<CR>:bn<CR>

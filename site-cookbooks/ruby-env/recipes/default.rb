@@ -58,6 +58,12 @@ execute "rbenv global #{node['ruby-env']['version']}" do
   environment 'HOME' => "/home/#{node['user']}"
 end
 
+cookbook_file "/home/#{node['user']}/.gemrc" do
+  owner node['user']
+  group node['group']
+  mode '0644'
+end
+
 %w(rbenv-rehash bundler).each do |gem|
   execute "gem install #{gem}" do
     command "/home/#{node['user']}/.rbenv/shims/gem install #{gem}"

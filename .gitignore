@@ -3,6 +3,7 @@
 /.vagrant/
 /bin/
 /vendor/bundle/
+/clients/
 Gemfile.lock
 *.box
 *.bak

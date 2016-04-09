@@ -1,0 +1,17 @@
+{
+  "name": "wordpress",
+  "default_attributes": {
+    "nginx": {
+      "user": "neowiz",
+      "group": "neowiz"
+    }
+  },
+  "run_list": [
+    "recipe[yum-epel]",
+    "recipe[yum-update]",
+    "recipe[mariadb]",
+    "recipe[nginx]",
+    "recipe[php-env]",
+    "recipe[wordpress]"
+  ]
+}

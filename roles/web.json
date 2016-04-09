@@ -1,21 +1,9 @@
 {
   "name": "web",
-  "override_attributes": {
-    "nginx": {
-      "install_method": "source",
-      "source": {
-        "version": "1.8.1",
-        "checksum": "8f4b3c630966c044ec72715754334d1fdf741caa1d5795fb4646c27d09f797b7",
-        "modules": [
-          "nginx::http_ssl_module",
-          "nginx::http_stub_status_module",
-          "nginx::http_gzip_static_module",
-          "nginx::http_mp4_module"
-        ]
-      }
-    }
-  },
   "run_list": [
+    "recipe[yum-epel]",
+    "recipe[ruby-env]",
+    "recipe[nodejs]",
     "recipe[nginx]"
   ]
 }
